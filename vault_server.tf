@@ -16,31 +16,11 @@ resource "aws_instance" "vault-server" {
 
   provisioner "remote-exec" {
     inline = [
-      # install consul binary
-      "sudo -H -u consul -s env VERSION='${var.consul_version}' /home/consul/install_consul.sh",
-
-      # set up the first #consul_servers amount of nodes as SERVER=true and as bootstrap-expect as the amount of server nodes
-      "sudo -H -u consul -s env RETRYIPS='${jsonencode(slice(var.consul_server_ips, 0, length(var.consul_server_ips)))}' SERVER='${count.index < length(var.consul_server_ips) ? "true" : "false"}' BOOTSTRAP='${length(var.consul_server_ips)}' /home/consul/configure_consul.sh",
-
-      # test auto-join
-      "sudo rm /etc/consul.d/retry_join.json",
-      #"echo -e 'retry_join = [\"provider=aws tag_key=CLUSTER tag_value=CONSUL\"]' | sudo tee /etc/consul.d/cloud_join.hcl",
-      "echo 'retry_join = [\"provider=aws tag_key=CLUSTER tag_value=CONSUL access_key_id=${var.consul-autojoin-keyid} secret_access_key=${var.consul-autojoin-secretkey}\"]' | sudo tee /etc/consul.d/cloud_join.hcl",      
-
-      # start up consul
-      "sudo systemctl start consul",
-
       # configure Consul
-      "NODE_NAME=consul01 \
-      ACCESS_KEY_ID=${var.consul-autojoin-keyid} \
-      SECRET_ACCESS_KEY=${var.consul-autojoin-secretkey} \
-      CLUSTER=CONSUL \
-      bash /home/vault/configure_consul.sh",
+      "NODE_NAME=consul${count.index} ACCESS_KEY_ID=${var.consul-autojoin-keyid} SECRET_ACCESS_KEY=${var.consul-autojoin-secretkey} CLUSTER=CONSUL bash /home/vault/configure_consul.sh",
 
       # configure vault
-      "AWS_REGION='${var.aws_region}' \
-      KMS_KEY='${aws_kms_key.vault.id}' \
-      bash /home/vault/configure_vault.sh"
+      "AWS_REGION='${var.aws_region}' KMS_KEY='${aws_kms_key.vault.id}' bash /home/vault/configure_vault.sh"
     ]
     connection {
       type = "ssh"
