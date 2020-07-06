@@ -38,14 +38,6 @@ variable "consul_server_ips" {
   ]
 }
 
-variable "consul_client_ips" {
-  default = [
-    "10.1.0.201",
-    "10.1.0.202",
-    "10.1.0.203",
-  ]
-}
-
 variable "consul_license" {}
 variable "consul-autojoin-keyid" {}
 variable "consul-autojoin-secretkey" {}
