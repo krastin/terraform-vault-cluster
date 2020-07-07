@@ -10,6 +10,10 @@ variable "vault_ami_filter" {
   default = "krastin-xenial-vault-*"
 }
 
+variable "vault_license" {
+  default = ""
+}
+
 variable "vault_server_ips" {
   default = [
     "10.1.0.11",

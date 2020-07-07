@@ -20,7 +20,7 @@ resource "aws_instance" "vault-server" {
       "sudo -H -u consul -s env SERVER='false' NODE_NAME=consul${count.index} ACCESS_KEY_ID='${var.consul-autojoin-keyid}' SECRET_ACCESS_KEY='${var.consul-autojoin-secretkey}' CLUSTER=CONSUL bash /home/consul/configure_consul.sh",
 
       # configure vault
-      "sudo -H -u vault -s env AWS_REGION='${var.aws_region}' KMS_KEY='${aws_kms_key.vault.id}' bash /home/vault/configure_vault.sh"
+      "sudo -H -u vault -s env VAULT_LICENSE='${var.vault_license}' AWS_REGION='${var.aws_region}' KMS_KEY='${aws_kms_key.vault.id}' bash /home/vault/configure_vault.sh"
     ]
     connection {
       type = "ssh"
