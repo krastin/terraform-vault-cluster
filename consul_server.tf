@@ -44,5 +44,5 @@ data "aws_ami" "ami-consul-server" {
         values = ["hvm"]
     }
 
-    owners = ["729476260648"]
+    owners = ["${var.aws_ami_owner}"]
 }

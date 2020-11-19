@@ -55,5 +55,5 @@ data "aws_ami" "ami-vault-server" {
         values = ["hvm"]
     }
 
-    owners = ["729476260648"]
+    owners = ["${var.aws_ami_owner}"]
 }

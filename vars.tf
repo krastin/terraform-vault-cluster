@@ -10,6 +10,10 @@ variable "vault_ami_filter" {
   default = "krastin-xenial-vault-*"
 }
 
+variable "aws_ami_owner" {
+  default = ""
+}
+
 variable "vault_license" {
   default = ""
 }
